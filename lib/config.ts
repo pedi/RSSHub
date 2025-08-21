@@ -12,6 +12,9 @@ export type Config = {
     nodeName?: string;
     puppeteerWSEndpoint?: string;
     chromiumExecutablePath?: string;
+    chromeExecutablePath?: string;
+    chromeUserDataDir?: string;
+    chromeProfileDirectory?: string;
     // network
     connect: {
         port: number;
@@ -77,6 +80,7 @@ export type Config = {
         filter_regex_engine: string;
         allow_user_supply_unsafe_domain: boolean;
         disable_nsfw: boolean;
+        enabled_namespaces?: string[];
     };
     suffix?: string;
     titleLengthLimit: number;
@@ -478,6 +482,9 @@ const calculateValue = () => {
         nodeName: envs.NODE_NAME,
         puppeteerWSEndpoint: envs.PUPPETEER_WS_ENDPOINT,
         chromiumExecutablePath: envs.CHROMIUM_EXECUTABLE_PATH,
+        chromeExecutablePath: envs.CHROME_EXECUTABLE_PATH,
+        chromeUserDataDir: envs.CHROME_USER_DATA_DIR,
+        chromeProfileDirectory: envs.CHROME_PROFILE_DIRECTORY,
         // network
         connect: {
             port: toInt(envs.PORT, 1200), // 监听端口
@@ -549,6 +556,7 @@ const calculateValue = () => {
             filter_regex_engine: envs.FILTER_REGEX_ENGINE || 're2',
             allow_user_supply_unsafe_domain: toBoolean(envs.ALLOW_USER_SUPPLY_UNSAFE_DOMAIN, false),
             disable_nsfw: toBoolean(envs.DISABLE_NSFW, false),
+            enabled_namespaces: envs.ENABLED_NAMESPACES?.split(',').map((s) => s.trim()),
         },
         suffix: envs.SUFFIX,
         titleLengthLimit: toInt(envs.TITLE_LENGTH_LIMIT, 150),
