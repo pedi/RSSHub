@@ -66,10 +66,20 @@ switch (process.env.NODE_ENV || process.env.VERCEL_ENV) {
         }
         break;
     default:
-        modules = directoryImport({
-            targetDirectoryPath: path.join(__dirname, './routes'),
-            importPattern: /\.ts$/,
-        }) as typeof modules;
+        logger.info(`config.feature.enabled_namespaces: ${config.feature.enabled_namespaces}`);
+        // eslint-disable-next-line unicorn/prefer-ternary
+        if (config.feature.enabled_namespaces?.length) {
+            // Only load specified namespaces
+            modules = directoryImport({
+                targetDirectoryPath: path.join(__dirname, './routes'),
+                importPattern: new RegExp(`(${config.feature.enabled_namespaces.join('|')})/.*\\.ts`),
+            }) as typeof modules;
+        } else {
+            modules = directoryImport({
+                targetDirectoryPath: path.join(__dirname, './routes'),
+                importPattern: /\.ts$/,
+            }) as typeof modules;
+        }
 }
 
 if (config.feature.disable_nsfw) {
